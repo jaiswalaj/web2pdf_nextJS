@@ -8,7 +8,13 @@ export const mergePDF = async (pdfNameList: string[], page_url: string) => {
     const regex = /[^a-zA-Z0-9\s]/g;
     const clean_url = page_url.replace(regex, '');
 
-    const combinedPDFFilePath = `./lib/webpage-combined_${clean_url}.pdf`;
+    const min = 1000000; 
+    const max = 9999999; 
+    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    const timestampInSeconds = Math.floor(new Date().getTime() / 1000); 
+    const fileName = `webpage-combined_${clean_url}_${timestampInSeconds}_${randomNum}.pdf`
+    const combinedPDFFilePath = `./lib/${fileName}`;
+
     const combinedPDF = await PDFDocument.create();
 
     for (const [index, pdfFilePath] of pdfNameList.entries()) {
@@ -22,7 +28,7 @@ export const mergePDF = async (pdfNameList: string[], page_url: string) => {
     const pdfBytes = await combinedPDF.save();
     fs.writeFileSync(combinedPDFFilePath, pdfBytes);
 
-    return combinedPDFFilePath
+    return fileName
 }
 
 

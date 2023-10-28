@@ -22,14 +22,15 @@ export const POST = async (req: Request, res: Response) => {
 
         const pdfFilePaths = await Promise.all(pdfFilePathPromises);
         const validPdfFilePaths = pdfFilePaths.filter((pdfFilePath) => pdfFilePath !== "");
-       
+        
+        let fileName = ""
         if (validPdfFilePaths.length > 0) {
-            const combinedPDFFilePath = await mergePDF(validPdfFilePaths, page_url)
+            fileName = await mergePDF(validPdfFilePaths, page_url)
         }
 
         deleteFiles(validPdfFilePaths)
 
-        return NextResponse.json({message: "OK", validPdfFilePaths}, {status: 201})
+        return NextResponse.json({message: "OK", fileName}, {status: 201})
         
     } catch (error) {
         return NextResponse.json(
